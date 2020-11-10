@@ -20,8 +20,8 @@ services:
       dockerfile: Dockerfile.dev
       context: ./api
     volumes:
-      - /target/api-0.0.1-SNAPSHOT.jar
-      - ./api:/target
+#      - /target/api-0.0.1-SNAPSHOT.jar # leave this as is
+      - ./api/target:/app/target # get back to first directory from : this folder
 #    ports:
 #      - "8080:8080"
 #    environment:
