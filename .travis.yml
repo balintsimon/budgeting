@@ -11,7 +11,7 @@ script:
   - docker run -e CI=true drbalintsimon/test-backend ./mvnw test
   - docker run -e CI=true drbalintsimon/test-frontend npm run test
 
-after_success:
+#after_success:
   # Build images
 #  - docker build -t drbalintsimon/budgeting-frontend ./frontend
 #  - docker build -t drbalintsimon/budgeting-api ./api
