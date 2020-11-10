@@ -1,4 +1,4 @@
 FROM maven:3.6.3-jdk-11 AS MAVEN_BUILD
 COPY ./ ./
 RUN mvn clean package
-CMD ["java", "-jar", "/target/api.jar"]
+CMD ["java", "-jar", "/target/api-0.0.1-SNAPSHOT.jar"]
