@@ -1,0 +1,39 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t drbalintsimon/test-backend -f ./api/Dockerfile.dev ./api
+  - docker build -t drbalintsimon/test-frontend -f ./frontend/Dockerfile.dev ./frontend
+
+script:
+  - docker run -r CI=true drbalintsimon/test-backend ./mvnw test
+  - docker run -r CI=true drbalintsimon/test-frontend npm run test
+
+after_success:
+  # Build images
+#  - docker build -t drbalintsimon/budgeting-frontend ./frontend
+#  - docker build -t drbalintsimon/budgeting-api ./api
+#  - docker build -t drbalintsimon/budgeting-nginx ./nginx
+#  # Log in to Docker CLI
+#  # TODO: add Docker password and ID to env on Trevis CI
+#  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+#  # Take images and push them to docker hub
+#  - docker push drbalintsimon/multi-client
+#  - docker push drbalintsimon/multi-nginx
+#  - docker push drbalintsimon/multi-server
+#  - docker push drbalintsimon/multi-worker
+#
+#deploy:
+#  provider: elasticbeanstalk
+#  region: 'eu-central-1'
+#  app: '...' # TODO: add name
+#  env: '...' # TODO: add env
+#  bucket_name: 'elasticbeanstalk-eu-central-1-...' # TODO: add endpoint name
+#  bucket_path: '...' # TODO: add path
+#  on:
+#    branch: master
+#  # TODO: add AWS access and secret keys to env on Trevis CI
+#  access_key_id: $AWS_ACCESS_KEY
+#  secret_access_key: $AWS_SECRET_KEY
