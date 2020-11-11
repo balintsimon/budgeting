@@ -11,10 +11,7 @@ services:
       dockerfile: Dockerfile.dev
       context: ./api
     volumes:
-#      - /target/api-0.0.1-SNAPSHOT.jar # leave this as is
-      - ./api/target:/app/app/target # get back to first directory from : this folder
-#    ports:
-#      - "8080:8080"
+      - ./api/target:/app/app/target
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -23,6 +20,8 @@ services:
       - PGDATABASE=postgres
       - PGPASSWORD=postgres_password
       - PGPORT=5432
+    depends_on:
+      - postgres
   frontend:
     stdin_open: true
     build:
