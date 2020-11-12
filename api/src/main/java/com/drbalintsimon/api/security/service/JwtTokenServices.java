@@ -35,13 +35,11 @@ public class JwtTokenServices {
     /**
      * Create a token.
      * @param username
-     * @param roles
      * @return a JWT
      */
-    public String createToken(String username, List<String> roles) {
+    public String createToken(String username) {
         // Add a custom field to the token
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put(rolesFieldName, roles);
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
