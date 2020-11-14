@@ -46,7 +46,7 @@ public class VisitorService {
     }
 
     private boolean isPatternMatch(VisitorCredentialsDTO credentialsDTO) {
-        return PatternUtil.isValidEmail(credentialsDTO.getEmail());
+        return PatternUtil.isValidEmail(credentialsDTO.getEmail()) && PatternUtil.isNameValid(credentialsDTO.getName());
     }
 
     private ResponseEntity checkIfNameOrEmailTaken(VisitorCredentialsDTO credentialsDTO) {

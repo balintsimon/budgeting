@@ -87,4 +87,75 @@ class PatternUtilTest {
 
         assertThat(actual).isEqualTo(expected);
     }
+
+    @Test
+    public void testSimpleValidName() {
+        String name = "Pattern";
+        boolean expected = true;
+
+        boolean actual = patternUtil.isNameValid(name);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+
+    @Test
+    public void testFullValidName() {
+        String name = "Donald Rumsfeld";
+        boolean expected = true;
+
+        boolean actual = patternUtil.isNameValid(name);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void testComplexValidName() {
+        String name = "D'onald-Ul R. von Schwartz, Dr. Jr.";
+        boolean expected = true;
+
+        boolean actual = patternUtil.isNameValid(name);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void testSpecialCharValidName() {
+        String name = "Éber Zoltán Dömötör";
+        boolean expected = true;
+
+        boolean actual = patternUtil.isNameValid(name);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void testInvalidCharInName() {
+        String name = "Éber? A!";
+        boolean expected = false;
+
+        boolean actual = patternUtil.isNameValid(name);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void testInvalidSpecialCharInName() {
+        String name = "Invalid <> [] () \\ /";
+        boolean expected = false;
+
+        boolean actual = patternUtil.isNameValid(name);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void testNumberInName() {
+        String name = "géza86";
+        boolean expected = true;
+
+        boolean actual = patternUtil.isNameValid(name);
+
+        assertThat(actual).isEqualTo(expected);
+    }
 }

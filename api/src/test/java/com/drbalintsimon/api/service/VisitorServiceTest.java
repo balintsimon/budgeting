@@ -175,4 +175,25 @@ class VisitorServiceTest {
 
         assertThat(actual).isEqualTo(expected);
     }
+
+    @Test
+    public void testInvalidNamePattern() {
+        String email = "donald@rumsfeld.com";
+        String name = "Donald<>";
+        String password = "password";
+        String message = "Invalid request";
+        boolean isRegistrationSuccessful = false;
+        VisitorCredentialsDTO newVisitor = new VisitorCredentialsDTO().builder()
+                .name(name)
+                .email(email)
+                .password(password)
+                .build();
+
+        ResponseEntity<?> expected = service.registrationMessage(message, isRegistrationSuccessful);
+        given(visitorDao.existsWithEmail(email)).willReturn(false);
+        given(visitorDao.existsWithName(name)).willReturn(false);
+        ResponseEntity<?> actual = service.tryRegister(newVisitor);
+
+        assertThat(actual).isEqualTo(expected);
+    }
 }
