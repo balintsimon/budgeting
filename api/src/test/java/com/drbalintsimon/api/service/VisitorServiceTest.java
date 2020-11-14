@@ -42,10 +42,10 @@ class VisitorServiceTest {
                 .password(password)
                 .build();
 
-        ResponseEntity expected = service.registrationMessage(message, isRegistrationSuccessful);
+        ResponseEntity<?> expected = service.registrationMessage(message, isRegistrationSuccessful);
         given(visitorDao.existsWithEmail(email)).willReturn(false);
         given(visitorDao.existsWithName(name)).willReturn(false);
-        ResponseEntity actual = service.tryRegister(newVisitor);
+        ResponseEntity<?> actual = service.tryRegister(newVisitor);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -55,7 +55,7 @@ class VisitorServiceTest {
         String email = "donald@rumsfeld.com";
         String name = "Rumsfeld";
         String password = "password";
-        String message = "Email " + email + " already taken!";
+        String message = "Email already taken!";
         boolean isRegistrationSuccessful = false;
         VisitorCredentialsDTO newVisitor = new VisitorCredentialsDTO().builder()
                 .name(name)
@@ -63,10 +63,10 @@ class VisitorServiceTest {
                 .password(password)
                 .build();
 
-        ResponseEntity expected = service.registrationMessage(message, isRegistrationSuccessful);
+        ResponseEntity<?> expected = service.registrationMessage(message, isRegistrationSuccessful);
         given(visitorDao.existsWithEmail(email)).willReturn(true);
         given(visitorDao.existsWithName(name)).willReturn(false);
-        ResponseEntity actual = service.tryRegister(newVisitor);
+        ResponseEntity<?> actual = service.tryRegister(newVisitor);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -76,7 +76,7 @@ class VisitorServiceTest {
         String email = "donald@rumsfeld.com";
         String name = "Rumsfeld";
         String password = "password";
-        String message = "Username " + name + " already taken!";
+        String message = "Username already taken!";
         boolean isRegistrationSuccessful = false;
         VisitorCredentialsDTO newVisitor = new VisitorCredentialsDTO().builder()
                 .name(name)
@@ -84,10 +84,52 @@ class VisitorServiceTest {
                 .password(password)
                 .build();
 
-        ResponseEntity expected = service.registrationMessage(message, isRegistrationSuccessful);
+        ResponseEntity<?> expected = service.registrationMessage(message, isRegistrationSuccessful);
         given(visitorDao.existsWithEmail(email)).willReturn(false);
         given(visitorDao.existsWithName(name)).willReturn(true);
-        ResponseEntity actual = service.tryRegister(newVisitor);
+        ResponseEntity<?> actual = service.tryRegister(newVisitor);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void testInvalidRequestEmptyField() {
+        String email = "donald@rumsfeld.com";
+        String name = "";
+        String password = "password";
+        String message = "Invalid request";
+        boolean isRegistrationSuccessful = false;
+        VisitorCredentialsDTO newVisitor = new VisitorCredentialsDTO().builder()
+                .name(name)
+                .email(email)
+                .password(password)
+                .build();
+
+        ResponseEntity<?> expected = service.registrationMessage(message, isRegistrationSuccessful);
+        given(visitorDao.existsWithEmail(email)).willReturn(false);
+        given(visitorDao.existsWithName(name)).willReturn(true);
+        ResponseEntity<?> actual = service.tryRegister(newVisitor);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void testInvalidRequestNullField() {
+        String email = "donald@rumsfeld.com";
+        String name = null;
+        String password = "password";
+        String message = "Invalid request";
+        boolean isRegistrationSuccessful = false;
+        VisitorCredentialsDTO newVisitor = new VisitorCredentialsDTO().builder()
+                .name(name)
+                .email(email)
+                .password(password)
+                .build();
+
+        ResponseEntity<?> expected = service.registrationMessage(message, isRegistrationSuccessful);
+        given(visitorDao.existsWithEmail(email)).willReturn(false);
+        given(visitorDao.existsWithName(name)).willReturn(true);
+        ResponseEntity<?> actual = service.tryRegister(newVisitor);
 
         assertThat(actual).isEqualTo(expected);
     }

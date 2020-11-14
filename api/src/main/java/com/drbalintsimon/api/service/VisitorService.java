@@ -19,17 +19,30 @@ public class VisitorService {
     private final VisitorDAO visitorDao;
 
     public ResponseEntity tryRegister(VisitorCredentialsDTO credentialsDTO) {
+        if (isRegistrationRequestInvalid(credentialsDTO)) {
+            String missingDataMessage = "Invalid request";
+            return registrationMessage(missingDataMessage, false);
+        }
         if (visitorDao.existsWithName(credentialsDTO.getName())) {
-            String usernameTakenMessage = "Username " + credentialsDTO.getName() + " already taken!";
+            String usernameTakenMessage = "Username already taken!";
             return registrationMessage(usernameTakenMessage, false);
         }
         if (visitorDao.existsWithEmail(credentialsDTO.getEmail())) {
-            String emailTakenMessage = "Email " + credentialsDTO.getEmail() + " already taken!";
+            String emailTakenMessage = "Email already taken!";
             return registrationMessage(emailTakenMessage, false);
         }
         visitorDao.save(credentialsDTO);
         String successMessage = "Registration is successful";
         return registrationMessage(successMessage, true);
+    }
+
+    private boolean isRegistrationRequestInvalid(VisitorCredentialsDTO credentialsDTO) {
+        return credentialsDTO.getEmail() == null ||
+                credentialsDTO.getName() == null ||
+                credentialsDTO.getPassword() == null ||
+                credentialsDTO.getEmail().isEmpty() ||
+                credentialsDTO.getName().isEmpty() ||
+                credentialsDTO.getPassword().isEmpty();
     }
 
     public ResponseEntity registrationMessage(String message, boolean isSuccessful) {
