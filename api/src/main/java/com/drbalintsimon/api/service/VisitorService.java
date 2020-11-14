@@ -23,6 +23,24 @@ public class VisitorService {
             String missingDataMessage = "Invalid request";
             return registrationMessage(missingDataMessage, false);
         }
+        ResponseEntity nameOrEmailTaken = checkIfNameOrEmailTaken(credentialsDTO);
+        if (nameOrEmailTaken != null) return nameOrEmailTaken;
+
+        visitorDao.save(credentialsDTO);
+        String successMessage = "Registration is successful";
+        return registrationMessage(successMessage, true);
+    }
+
+    private boolean isRegistrationRequestInvalid(VisitorCredentialsDTO credentialsDTO) {
+        return credentialsDTO.getEmail() == null ||
+                credentialsDTO.getName() == null ||
+                credentialsDTO.getPassword() == null ||
+                credentialsDTO.getEmail().isEmpty() ||
+                credentialsDTO.getName().isEmpty() ||
+                credentialsDTO.getPassword().isEmpty();
+    }
+
+    private ResponseEntity checkIfNameOrEmailTaken(VisitorCredentialsDTO credentialsDTO) {
         if (visitorDao.existsWithName(credentialsDTO.getName()) &&
                 visitorDao.existsWithEmail(credentialsDTO.getEmail())) {
             String usernameAndEmailTakenMessage = "Username and e-mail already taken!";
@@ -36,18 +54,7 @@ public class VisitorService {
             String emailTakenMessage = "E-mail already taken!";
             return registrationMessage(emailTakenMessage, false);
         }
-        visitorDao.save(credentialsDTO);
-        String successMessage = "Registration is successful";
-        return registrationMessage(successMessage, true);
-    }
-
-    private boolean isRegistrationRequestInvalid(VisitorCredentialsDTO credentialsDTO) {
-        return credentialsDTO.getEmail() == null ||
-                credentialsDTO.getName() == null ||
-                credentialsDTO.getPassword() == null ||
-                credentialsDTO.getEmail().isEmpty() ||
-                credentialsDTO.getName().isEmpty() ||
-                credentialsDTO.getPassword().isEmpty();
+        return null;
     }
 
     public ResponseEntity registrationMessage(String message, boolean isSuccessful) {
