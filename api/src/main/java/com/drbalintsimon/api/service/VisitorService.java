@@ -23,12 +23,17 @@ public class VisitorService {
             String missingDataMessage = "Invalid request";
             return registrationMessage(missingDataMessage, false);
         }
+        if (visitorDao.existsWithName(credentialsDTO.getName()) &&
+                visitorDao.existsWithEmail(credentialsDTO.getEmail())) {
+            String usernameAndEmailTakenMessage = "Username and e-mail already taken!";
+            return registrationMessage(usernameAndEmailTakenMessage, false);
+        }
         if (visitorDao.existsWithName(credentialsDTO.getName())) {
             String usernameTakenMessage = "Username already taken!";
             return registrationMessage(usernameTakenMessage, false);
         }
         if (visitorDao.existsWithEmail(credentialsDTO.getEmail())) {
-            String emailTakenMessage = "Email already taken!";
+            String emailTakenMessage = "E-mail already taken!";
             return registrationMessage(emailTakenMessage, false);
         }
         visitorDao.save(credentialsDTO);

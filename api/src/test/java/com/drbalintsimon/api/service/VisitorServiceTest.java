@@ -51,11 +51,32 @@ class VisitorServiceTest {
     }
 
     @Test
+    public void testUsernameAndEmailTakenRegistration() {
+        String email = "donald@rumsfeld.com";
+        String name = "Rumsfeld";
+        String password = "password";
+        String message = "Username and e-mail already taken!";
+        boolean isRegistrationSuccessful = false;
+        VisitorCredentialsDTO newVisitor = new VisitorCredentialsDTO().builder()
+                .name(name)
+                .email(email)
+                .password(password)
+                .build();
+
+        ResponseEntity<?> expected = service.registrationMessage(message, isRegistrationSuccessful);
+        given(visitorDao.existsWithEmail(email)).willReturn(true);
+        given(visitorDao.existsWithName(name)).willReturn(true);
+        ResponseEntity<?> actual = service.tryRegister(newVisitor);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
     public void testEmailTakenRegistration() {
         String email = "donald@rumsfeld.com";
         String name = "Rumsfeld";
         String password = "password";
-        String message = "Email already taken!";
+        String message = "E-mail already taken!";
         boolean isRegistrationSuccessful = false;
         VisitorCredentialsDTO newVisitor = new VisitorCredentialsDTO().builder()
                 .name(name)
