@@ -24,12 +24,12 @@ public class VisitorService {
             String missingDataMessage = "Invalid request";
             return registrationMessage(missingDataMessage, false);
         }
-        if (!isPatternMatch(credentialsDTO)) {
+        if (isPatternMismatchFound(credentialsDTO)) {
             String patternInvalidMessage = "Invalid request";
             return registrationMessage(patternInvalidMessage, false);
         }
-        ResponseEntity nameOrEmailTaken = checkIfNameOrEmailTaken(credentialsDTO);
-        if (nameOrEmailTaken != null) return nameOrEmailTaken;
+        ResponseEntity nameOrEmailTakenResponse = checkIfNameOrEmailTaken(credentialsDTO);
+        if (nameOrEmailTakenResponse != null) return nameOrEmailTakenResponse;
 
         visitorDao.save(credentialsDTO);
         String successMessage = "Registration is successful";
@@ -45,8 +45,8 @@ public class VisitorService {
                 credentialsDTO.getPassword().isEmpty();
     }
 
-    private boolean isPatternMatch(VisitorCredentialsDTO credentialsDTO) {
-        return PatternUtil.isValidEmail(credentialsDTO.getEmail()) && PatternUtil.isNameValid(credentialsDTO.getName());
+    private boolean isPatternMismatchFound(VisitorCredentialsDTO credentialsDTO) {
+        return !PatternUtil.isValidEmail(credentialsDTO.getEmail()) || !PatternUtil.isNameValid(credentialsDTO.getName());
     }
 
     private ResponseEntity checkIfNameOrEmailTaken(VisitorCredentialsDTO credentialsDTO) {
