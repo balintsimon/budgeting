@@ -2,6 +2,7 @@ package com.drbalintsimon.api.service;
 
 import com.drbalintsimon.api.model.dto.VisitorCredentialsDTO;
 import com.drbalintsimon.api.service.dao.VisitorDAO;
+import com.drbalintsimon.api.util.PatternUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,10 @@ public class VisitorService {
             String missingDataMessage = "Invalid request";
             return registrationMessage(missingDataMessage, false);
         }
+        if (!isPatternMatch(credentialsDTO)) {
+            String patternInvalidMessage = "Invalid request";
+            return registrationMessage(patternInvalidMessage, false);
+        }
         ResponseEntity nameOrEmailTaken = checkIfNameOrEmailTaken(credentialsDTO);
         if (nameOrEmailTaken != null) return nameOrEmailTaken;
 
@@ -38,6 +43,10 @@ public class VisitorService {
                 credentialsDTO.getEmail().isEmpty() ||
                 credentialsDTO.getName().isEmpty() ||
                 credentialsDTO.getPassword().isEmpty();
+    }
+
+    private boolean isPatternMatch(VisitorCredentialsDTO credentialsDTO) {
+        return PatternUtil.isValidEmail(credentialsDTO.getEmail());
     }
 
     private ResponseEntity checkIfNameOrEmailTaken(VisitorCredentialsDTO credentialsDTO) {
